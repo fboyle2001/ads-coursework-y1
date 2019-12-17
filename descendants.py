@@ -3,7 +3,7 @@ known = {}
 
 def calculate_child(i):
     child = 0
-    
+
     while i != 0:
         digit = i % 10
         child += digit_factorial[digit]
@@ -11,45 +11,42 @@ def calculate_child(i):
         
     return child
 
-def find_descendants(i):
-    #store a set of descendants to this point
-    #then subtract the set of descendants after this point
-    #will give total descendants of a number?
-    seen = set()
+def find_strength(i, seen):
+    if i in known:
+        return known[i]
 
-    while i not in seen:
-        seen.add(i)
-        i = calculate_child(i)
-
-    return len(seen)
-
-def find_des_length(i, seen):
     if i in seen:
-        #we are done but lets find the loop so we can memorise
         last_seen_index = seen.index(i)
         loop_length = len(seen) - last_seen_index
-        
+
         for x in seen[last_seen_index:]:
             known[x] = loop_length
 
-        for index, x in enumerate(seen[:last_seen_index]):
-            known[x] = len(seen) - index - 1
-            
-        return known[seen[0]]
-    else:
-        seen.append(i)
-        return find_des_length(calculate_child(i), seen)
+        return 0
 
-f = lambda k: find_des_length(k, [])
+    seen.append(i)
+    strength = 1 + find_strength(calculate_child(i), seen)
+    
+    if i not in known:
+        known[i] = strength
+        
+    return strength
+
+def find_strength_start(i):
+    if calculate_child(i) == i:
+        known[i] = 1
+    
+    return find_strength(calculate_child(i), [])
 
 def descendants(a, b, k):
-    c = 0
+    count = 0
+    
     for i in range(a, b):
-        l = find_des_length(i, [])
-        #print(i, l)
-        if l == k:
-            c += 1
-    return c 
+        strength = find_strength_start(i)
+        if strength == k:
+            count += 1
+            
+    return count
 
 def q2test():
     assert descendants(1,2,1) == 1
@@ -66,4 +63,9 @@ def q2test():
     print("passed f")
     assert descendants(1,1000000,60) == 0
     print("passed g")
+
+from eulerlib import time_algorithm
+
+def time_test():
+    time_algorithm(q2test)
     
