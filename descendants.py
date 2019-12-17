@@ -1,4 +1,4 @@
-digit_factorial = {0: 1, 1: 1, 2: 2, 3: 6, 4: 24, 5: 120, 6: 720, 7: 5040, 8: 40320, 9: 362880}
+digit_factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880]
 known = {}
 
 def calculate_child(i):
@@ -8,7 +8,7 @@ def calculate_child(i):
         digit = i % 10
         child += digit_factorial[digit]
         i = i // 10
-        
+
     return child
 
 def find_strength(i, seen):
@@ -33,10 +33,12 @@ def find_strength(i, seen):
     return strength
 
 def find_strength_start(i):
-    if calculate_child(i) == i:
+    start_child = calculate_child(i)
+    
+    if start_child == i:
         known[i] = 1
     
-    return find_strength(calculate_child(i), [])
+    return find_strength(start_child, [])
 
 def descendants(a, b, k):
     count = 0
