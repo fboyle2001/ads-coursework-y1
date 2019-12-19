@@ -1,5 +1,6 @@
 digit_factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880]
 known = {}
+stored = {}
 
 def calculate_child(i):
     child = 0
@@ -27,24 +28,27 @@ def find_strength(i, seen):
     seen.append(i)
     strength = 1 + find_strength(calculate_child(i), seen)
     
-    if i not in known:
+    if i not in known.keys():
         known[i] = strength
         
     return strength
 
 def find_strength_start(i):
+    if i in stored:
+        return stored[i]
+    
     start_child = calculate_child(i)
+    length = find_strength(start_child, [])
     
-    if start_child == i:
-        known[i] = 1
-    
-    return find_strength(start_child, [])
+    return length
 
 def descendants(a, b, k):
     count = 0
     
     for i in range(a, b):
         strength = find_strength_start(i)
+        stored[i] = strength
+        
         if strength == k:
             count += 1
             
@@ -69,5 +73,5 @@ def q2test():
 from eulerlib import time_algorithm
 
 def time_test():
-    time_algorithm(q2test)
+    time_algorithm(q2test, trials=1)
     
