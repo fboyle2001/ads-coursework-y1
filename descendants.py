@@ -26,10 +26,11 @@ def find_strength(i, seen):
         return 0
 
     seen.append(i)
-    strength = 1 + find_strength(calculate_child(i), seen)
+    strength = find_strength(calculate_child(i), seen) + 1
     
     if i not in known.keys():
         known[i] = strength
+        stored[i] = strength - 1
         
     return strength
 
@@ -38,16 +39,16 @@ def find_strength_start(i):
         return stored[i]
     
     start_child = calculate_child(i)
-    length = find_strength(start_child, [])
+    strength = find_strength(start_child, [])
+    stored[i] = strength
     
-    return length
+    return strength
 
 def descendants(a, b, k):
     count = 0
     
     for i in range(a, b):
         strength = find_strength_start(i)
-        stored[i] = strength
         
         if strength == k:
             count += 1
@@ -74,4 +75,13 @@ from eulerlib import time_algorithm
 
 def time_test():
     time_algorithm(q2test, trials=1)
-    
+
+#singles and loops have stored - known = 1 for some reason?!?!
+def diff():
+    print("X | KNOWN | STORED")
+    for x in known.keys():
+        s = stored[x]
+        d = known[x] - s
+        if d != 0:
+            print(x, known[x], s)
+    print("done")
