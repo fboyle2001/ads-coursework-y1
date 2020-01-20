@@ -1,11 +1,15 @@
+#39 lines of code
 digit_factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880]
 known = {}
 stored = {}
-#39 lines
 
+#Calculates the child of a number
 def calculate_child(i):
     child = 0
 
+    #Gets the right-most digit and then finds its digit factorial
+    #Then takes mod 10 to remove the last digit and shift all of the
+    #other digits left
     while i != 0:
         digit = i % 10
         child += digit_factorial[digit]
@@ -13,6 +17,10 @@ def calculate_child(i):
 
     return child
 
+#Calculates the strength recursively by maintaining a temporary array
+#to track which numbers have already been included
+#I used an array over a set here as it allows calculation of the length
+#of the loops as sets do not respect insertion order
 def find_strength(i, seen):
     if i in known:
         return known[i]
@@ -21,6 +29,8 @@ def find_strength(i, seen):
         last_seen_index = seen.index(i)
         loop_length = len(seen) - last_seen_index
 
+        #If we find a loop then store the length of each of these loops
+        #since they appear in almost all sequences
         for x in seen[last_seen_index:]:
             known[x] = loop_length
 
@@ -28,13 +38,16 @@ def find_strength(i, seen):
 
     seen.append(i)
     strength = find_strength(calculate_child(i), seen) + 1
-    
+
+    #Instead of waiting until we reach a number in the cycle
+    #we can precompute it using the work already done in this cycle
     if i not in known.keys():
         known[i] = strength
         stored[i] = strength - 1
         
     return strength
 
+#Initial setup before we actually do the recursion
 def find_strength_start(i):
     if i in stored:
         return stored[i]
@@ -47,7 +60,9 @@ def find_strength_start(i):
 
 def descendants(a, b, k):
     count = 0
-    
+
+    #Loops over the range and finds the strength of each number
+    #Simply just maintains a count of the amount that = k
     for i in range(a, b):
         strength = find_strength_start(i)
         
@@ -55,42 +70,3 @@ def descendants(a, b, k):
             count += 1
             
     return count
-
-def q2test():
-    assert descendants(1,2,1) == 1
-    #print("passed a")
-    assert descendants(1,200,1) == 6
-    #print("passed b")
-    assert descendants(1,2000,3) == 33
-    #print("passed c")
-    assert descendants(4000,6000,3) == 36
-    #print("passed d")
-    assert descendants(123456,654321,20) == 4015
-    #print("passed e")
-    assert descendants(1,1000000,59) == 402
-    #print("passed f")
-    assert descendants(1,1000000,60) == 0
-    #print("passed g")
-
-import time
-import importlib
-
-def individual_time_test(a, b, k, q):
-    start = time.time()
-    assert descendants(a, b, k) == q
-    end = time.time()
-    return end - start
-    
-def time_test():
-    eulerlib = importlib.util.find_spec("eulerlib")
-
-    if eulerlib is not None:
-        import eulerlib
-        eulerlib.time_algorithm(q2test, trials=1)
-    else:
-        import time
-        start = time.time()
-        q2test()
-        end = time.time()
-        delta = end - start
-        print("Took", delta, "seconds")

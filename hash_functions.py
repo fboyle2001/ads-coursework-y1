@@ -14,6 +14,7 @@ def hash_quartic(keys):
         skip = False
 
         while table[hash_value] != "-":
+            print(k, hash_value, j)
             j += 1
             hash_value = (initial_hash + j ** 4) % 23
 
@@ -77,4 +78,6 @@ def pattern():
     for j in range(23, 100):
         print(j, (j ** 4) % 23, ((j % 23) ** 4) % 23)
 
-broken = [4, 10, 62, 22, 51, 63, 52, 58, 53, 59, 54, 20]
+broken = [4, 10, 62, 22, 51, 63, 52, 58, 53, 59, 54, 20, 50]
+
+
