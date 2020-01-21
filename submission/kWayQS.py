@@ -20,7 +20,7 @@ def insertionsort(A):
 
         while lower >= 0 and A[lower] > x:
             A[lower + 1] = A[lower]
-            i -= 1
+            lower -= 1
 
         A[lower + 1] = x
 

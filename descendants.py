@@ -73,7 +73,6 @@ def q2test():
     #print("passed g")
 
 import time
-import importlib
 
 def individual_time_test(a, b, k, q):
     start = time.time()
@@ -82,15 +81,8 @@ def individual_time_test(a, b, k, q):
     return end - start
     
 def time_test():
-    eulerlib = importlib.util.find_spec("eulerlib")
-
-    if eulerlib is not None:
-        import eulerlib
-        eulerlib.time_algorithm(q2test, trials=1)
-    else:
-        import time
-        start = time.time()
-        q2test()
-        end = time.time()
-        delta = end - start
-        print("Took", delta, "seconds")
+    start = time.time()
+    q2test()
+    end = time.time()
+    delta = end - start
+    print("Took", delta, "seconds")

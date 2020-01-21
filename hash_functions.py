@@ -80,4 +80,4 @@ def pattern():
 
 broken = [4, 10, 62, 22, 51, 63, 52, 58, 53, 59, 54, 20, 50]
 
-
+print(hash_double(broken))
