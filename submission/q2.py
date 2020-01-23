@@ -36,7 +36,9 @@ def find_strength(i, seen):
 
         return 0
 
+    #Store the path that we have taken
     seen.append(i)
+    #Recursively take the strength of the next number, each time add 1
     strength = find_strength(calculate_child(i), seen) + 1
 
     #Instead of waiting until we reach a number in the cycle

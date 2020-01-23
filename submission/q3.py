@@ -33,9 +33,10 @@ def LP2(string):
     longest = []
     #we want to consider all wrap arounds of the string
     for start_point in range(0, n):
+        #once we have a wrap around version just call LP on it
+        #store the longest palindrome
         wrap = string[start_point:n] + string[0:start_point]
         longest.append(LP(wrap))
-        
+
+    #get the longest palindrome from the list
     return max(longest)
-    
-    
